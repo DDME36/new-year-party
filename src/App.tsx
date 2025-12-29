@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
+import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { useState, useEffect, createContext, useContext } from 'react'
 import HomePage from './pages/HomePage'
 import RegisterPage from './pages/RegisterPage'
@@ -99,15 +99,15 @@ function Navigation() {
   const { guests } = useGuests()
   const checkedIn = guests.filter(g => g.checkedIn).length
   const [menuOpen, setMenuOpen] = useState(false)
-  
+
   if (location.pathname === '/live') return null
-  
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass bg-[#fffbf0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-lg sm:text-xl font-bold text-[#2d2d2d]">PARTY 2026</Link>
-          
+
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6">
             <Link to="/" className={`text-sm font-medium transition-colors ${location.pathname === '/' ? 'text-[#ff6b9d]' : 'text-[#666] hover:text-[#2d2d2d]'}`}>หน้าแรก</Link>
@@ -115,7 +115,7 @@ function Navigation() {
             <Link to="/board" className={`text-sm font-medium transition-colors ${location.pathname === '/board' ? 'text-[#ff6b9d]' : 'text-[#666] hover:text-[#2d2d2d]'}`}>รายชื่อ</Link>
             <div className="ml-2 px-3 py-1 rounded-full bg-[#ffd93d] text-[#2d2d2d] text-sm font-semibold border-2 border-[#2d2d2d]">{checkedIn}/{guests.length}</div>
           </div>
-          
+
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-3 md:hidden">
             <div className="px-2.5 py-1 rounded-full bg-[#ffd93d] text-[#2d2d2d] text-xs font-semibold border-2 border-[#2d2d2d]">{checkedIn}/{guests.length}</div>
@@ -126,7 +126,7 @@ function Navigation() {
             </button>
           </div>
         </div>
-        
+
         {/* Mobile Menu */}
         {menuOpen && (
           <div className="md:hidden mt-3 pt-3 border-t-2 border-[#eee] flex flex-col gap-2">
@@ -142,7 +142,7 @@ function Navigation() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <GuestProvider>
         <Navigation />
         <Routes>
@@ -153,7 +153,7 @@ function App() {
           <Route path="/live" element={<LiveDisplayPage />} />
         </Routes>
       </GuestProvider>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
