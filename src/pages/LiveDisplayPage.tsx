@@ -82,7 +82,7 @@ export default function LiveDisplayPage() {
         <div className="flex items-center justify-between mb-[1.5vw]">
           <div>
             <h1 className="font-display text-[3.5vw] font-bold text-[#2d2d2d] leading-none">PARTY 2026</h1>
-            <p className="text-[#666] text-[1.2vw]">บ้านย่า พ้องพาน</p>
+            <p className="text-[#666] text-[1.2vw]">53 หมู่ 2 ต.ร่องกาศ อ.สูงเม่น จ.แพร่</p>
           </div>
           <div className="text-right">
             <p className="font-display text-[5vw] font-bold text-[#ff6b9d] leading-none">{currentTime.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</p>

@@ -5,38 +5,38 @@ import MemphisBackground from '../components/MemphisBackground'
 const EVENT_DETAILS = {
   date: '31 ธันวาคม 2568',
   time: '18.00 น.',
-  venue: 'บ้านย่า พ้องพาน',
-  address: '53 หมู่ 2 ตำบลนาจักร อำเภอเมือง จังหวัดแพร่ 54000',
+  venue: '53 หมู่ 2 ต.ร่องกาศ อ.สูงเม่น จ.แพร่ 54130',
+  address: '53 หมู่ 2 ตำบลร่องกาศ อำเภอสูงเม่น จังหวัดแพร่ 54130',
   googleMapsUrl: 'https://maps.app.goo.gl/cVaKZXAufKvJDq4o6',
   appleMapsUrl: 'https://maps.apple.com/place?coordinate=18.102027,100.137271&name=52%20Ban%20Rong%20Kat%20Nuea-Na%20Chak%20Road&map=explore',
 }
 
 export default function HomePage() {
   const { guests } = useGuests()
-  const checkedIn = guests.filter(g => g.checkedIn).length
+  const checkedIn = guests.filter(g => g.checked_in).length
 
   return (
     <div className="min-h-screen relative">
       <MemphisBackground />
-      
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 pt-20 pb-10 z-10">
         <div className="text-center w-full max-w-4xl mx-auto">
           <div className="badge badge-pink mb-4 sm:mb-6 text-xs sm:text-sm">ขอเรียนเชิญร่วมงาน</div>
-          
+
           <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold mb-2 text-[#2d2d2d]">PARTY</h1>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium mb-3 sm:mb-4">ฉลองปีใหม่</h2>
           <p className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-[#ff6b9d] text-shadow mb-6 sm:mb-8">2026</p>
-          
+
           <p className="text-[#666] text-base sm:text-lg md:text-xl max-w-md sm:max-w-xl mx-auto mb-8 sm:mb-12 px-4">
             มาร่วมส่งท้ายปีเก่าต้อนรับปีใหม่ไปด้วยกัน สร้างความทรงจำดีๆ ที่จะไม่มีวันลืม
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <Link to="/register" className="btn-primary text-base sm:text-lg w-full sm:w-auto">ลงทะเบียนเข้าร่วม</Link>
             <Link to="/board" className="btn-secondary text-base sm:text-lg w-full sm:w-auto">ดูรายชื่อแขก</Link>
           </div>
-          
+
           <div className="mt-10 sm:mt-16 flex justify-center gap-4 sm:gap-8">
             <div className="card px-4 sm:px-8 py-3 sm:py-4">
               <p className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#ff6b9d]">{guests.length}</p>
@@ -49,13 +49,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      
+
       {/* Event Details */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 text-center">รายละเอียดงาน</h2>
           <p className="text-[#666] text-center mb-8 sm:mb-12 text-sm sm:text-base">ข้อมูลที่คุณต้องรู้</p>
-          
+
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="card text-center p-4 sm:p-5" style={{ borderColor: '#ff6b9d' }}>
               <div className="w-10 h-10 sm:w-14 sm:h-14 mx-auto mb-3 sm:mb-4 rounded-full bg-[#ff6b9d] flex items-center justify-center">
@@ -101,7 +101,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      
+
       {/* CTA */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
@@ -110,7 +110,7 @@ export default function HomePage() {
           <Link to="/register" className="btn-primary text-base sm:text-lg inline-block">ลงทะเบียนเข้าร่วมงาน</Link>
         </div>
       </section>
-      
+
       <footer className="py-6 sm:py-8 px-4 sm:px-6 border-t-2 border-[#eee] relative z-10">
         <p className="text-center text-[#666] text-sm">งานฉลองปีใหม่ 2026</p>
       </footer>
