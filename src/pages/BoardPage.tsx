@@ -6,7 +6,7 @@ const colors = ['#ff6b9d', '#ffd93d', '#6bcb77', '#9b5de5', '#4ecdc4', '#ff8c42'
 
 export default function BoardPage() {
   const { guests } = useGuests()
-  const checkedIn = guests.filter(g => g.checkedIn).length
+  const checkedIn = guests.filter(g => g.checked_in).length
   const pending = guests.length - checkedIn
 
   const formatTime = (isoString: string) => new Date(isoString).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
@@ -19,7 +19,7 @@ export default function BoardPage() {
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4">GUESTS</h1>
           <p className="text-[#666] text-sm sm:text-lg">รายชื่อแขกงานปีใหม่ 2026</p>
         </div>
-        
+
         <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-8 sm:mb-12 max-w-xs sm:max-w-lg mx-auto">
           <div className="card text-center p-3 sm:p-4" style={{ borderColor: '#ff6b9d' }}>
             <p className="font-display text-2xl sm:text-4xl font-bold text-[#ff6b9d]">{guests.length}</p>
@@ -34,7 +34,7 @@ export default function BoardPage() {
             <p className="text-[#666] text-xs sm:text-sm">รอเข้างาน</p>
           </div>
         </div>
-        
+
         {guests.length === 0 ? (
           <div className="text-center py-12 sm:py-20">
             <div className="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-4 sm:mb-6 rounded-full bg-[#ffd93d] border-3 sm:border-4 border-[#2d2d2d] flex items-center justify-center">
@@ -51,22 +51,22 @@ export default function BoardPage() {
             {guests.map((guest, index) => {
               const color = colors[index % colors.length]
               return (
-                <div key={guest.id} className="card p-3 sm:p-4" style={{ borderColor: guest.checkedIn ? '#6bcb77' : color }}>
-                  {guest.checkedIn && <div className="absolute top-3 right-3"><div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#6bcb77]" /></div>}
+                <div key={guest.id} className="card p-3 sm:p-4" style={{ borderColor: guest.checked_in ? '#6bcb77' : color }}>
+                  {guest.checked_in && <div className="absolute top-3 right-3"><div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#6bcb77]" /></div>}
                   <div className="flex items-start gap-2 sm:gap-3">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-base sm:text-lg font-bold text-white flex-shrink-0" style={{ backgroundColor: guest.checkedIn ? '#6bcb77' : color }}>
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-base sm:text-lg font-bold text-white flex-shrink-0" style={{ backgroundColor: guest.checked_in ? '#6bcb77' : color }}>
                       {guest.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-sm sm:text-base truncate">{guest.name}</h3>
                       <p className="text-[#999] text-xs sm:text-sm">#{index + 1}</p>
-                      {guest.checkedIn && <p className="text-[#6bcb77] text-xs mt-0.5">มาถึง {formatTime(guest.checkedInAt!)}</p>}
+                      {guest.checked_in && <p className="text-[#6bcb77] text-xs mt-0.5">มาถึง {formatTime(guest.checked_in_at!)}</p>}
                     </div>
                   </div>
                   <div className="mt-3 pt-2 sm:pt-3 border-t-2 border-[#eee] flex items-center justify-between">
-                    <span className="text-[#999] text-[10px] sm:text-xs">{formatTime(guest.registeredAt)}</span>
-                    <span className={`badge text-[10px] sm:text-xs py-0.5 px-2 ${guest.checkedIn ? 'badge-green' : 'badge-yellow'}`}>
-                      {guest.checkedIn ? 'มาแล้ว' : 'รอ'}
+                    <span className="text-[#999] text-[10px] sm:text-xs">{formatTime(guest.registered_at)}</span>
+                    <span className={`badge text-[10px] sm:text-xs py-0.5 px-2 ${guest.checked_in ? 'badge-green' : 'badge-yellow'}`}>
+                      {guest.checked_in ? 'มาแล้ว' : 'รอ'}
                     </span>
                   </div>
                 </div>
@@ -74,7 +74,7 @@ export default function BoardPage() {
             })}
           </div>
         )}
-        
+
         <div className="mt-8 sm:mt-12 text-center">
           <Link to="/register" className="btn-secondary text-sm sm:text-base">ลงทะเบียนแขกเพิ่ม</Link>
         </div>

@@ -9,15 +9,15 @@ export default function AdminPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null)
   const [quickAddName, setQuickAddName] = useState('')
-  
-  const checkedIn = guests.filter(g => g.checkedIn).length
+
+  const checkedIn = guests.filter(g => g.checked_in).length
   const pending = guests.length - checkedIn
   const progress = guests.length > 0 ? (checkedIn / guests.length) * 100 : 0
 
   const filteredGuests = guests.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase()))
   const sortedGuests = [...filteredGuests].sort((a, b) => {
-    if (a.checkedIn && !b.checkedIn) return 1
-    if (!a.checkedIn && b.checkedIn) return -1
+    if (a.checked_in && !b.checked_in) return 1
+    if (!a.checked_in && b.checked_in) return -1
     return a.name.localeCompare(b.name)
   })
 
@@ -38,20 +38,20 @@ export default function AdminPage() {
             <p className="text-[#666] mt-1">จัดการแขกและเช็คอิน</p>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => guests.forEach(g => { if (!g.checkedIn) checkInGuest(g.id) })} disabled={pending === 0}
+            <button onClick={() => guests.forEach(g => { if (!g.checked_in) checkInGuest(g.id) })} disabled={pending === 0}
               className="btn-primary disabled:opacity-50">เช็คอินทั้งหมด</button>
-            <button onClick={() => guests.forEach(g => { if (g.checkedIn) uncheckGuest(g.id) })} disabled={checkedIn === 0}
+            <button onClick={() => guests.forEach(g => { if (g.checked_in) uncheckGuest(g.id) })} disabled={checkedIn === 0}
               className="btn-secondary disabled:opacity-50">รีเซ็ต</button>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="card" style={{ borderColor: '#ff6b9d' }}><p className="text-[#666] mb-1">ลงทะเบียน</p><p className="font-display text-3xl font-bold text-[#ff6b9d]">{guests.length}</p></div>
           <div className="card" style={{ borderColor: '#6bcb77' }}><p className="text-[#666] mb-1">เช็คอินแล้ว</p><p className="font-display text-3xl font-bold text-[#6bcb77]">{checkedIn}</p></div>
           <div className="card" style={{ borderColor: '#ffd93d' }}><p className="text-[#666] mb-1">รอเข้างาน</p><p className="font-display text-3xl font-bold text-[#ffd93d]">{pending}</p></div>
           <div className="card" style={{ borderColor: '#9b5de5' }}><p className="text-[#666] mb-1">ความคืบหน้า</p><p className="font-display text-3xl font-bold text-[#9b5de5]">{Math.round(progress)}%</p></div>
         </div>
-        
+
         <div className="card mb-6">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[#666]">ความคืบหน้าการเช็คอิน</span>
@@ -70,11 +70,11 @@ export default function AdminPage() {
             <button type="submit" disabled={!quickAddName.trim()} className="btn-primary px-8 disabled:opacity-50">เพิ่ม</button>
           </form>
         </div>
-        
+
         <div className="mb-6">
           <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="ค้นหาแขก..." className="input-field" />
         </div>
-        
+
         {guests.length === 0 ? (
           <div className="card text-center py-16">
             <p className="text-[#666] text-lg">ยังไม่มีแขกลงทะเบียน</p>
@@ -84,16 +84,16 @@ export default function AdminPage() {
             {sortedGuests.map((guest) => {
               const color = colors[guests.indexOf(guest) % colors.length]
               return (
-                <div key={guest.id} className="card flex items-center gap-4" style={{ borderColor: guest.checkedIn ? '#6bcb77' : color }}>
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white" style={{ backgroundColor: guest.checkedIn ? '#6bcb77' : color }}>
+                <div key={guest.id} className="card flex items-center gap-4" style={{ borderColor: guest.checked_in ? '#6bcb77' : color }}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white" style={{ backgroundColor: guest.checked_in ? '#6bcb77' : color }}>
                     {guest.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-lg truncate">{guest.name}</h3>
-                    <p className="text-sm text-[#999]">ลงทะเบียน {formatTime(guest.registeredAt)}{guest.checkedIn && <span className="text-[#6bcb77] ml-2">• มาถึง {formatTime(guest.checkedInAt!)}</span>}</p>
+                    <p className="text-sm text-[#999]">ลงทะเบียน {formatTime(guest.registered_at)}{guest.checked_in && <span className="text-[#6bcb77] ml-2">• มาถึง {formatTime(guest.checked_in_at!)}</span>}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {guest.checkedIn ? (
+                    {guest.checked_in ? (
                       <button onClick={() => uncheckGuest(guest.id)} className="btn-secondary py-2 px-4 text-sm">ยกเลิก</button>
                     ) : (
                       <button onClick={() => checkInGuest(guest.id)} className="btn-primary py-2 px-4 text-sm">เช็คอิน</button>

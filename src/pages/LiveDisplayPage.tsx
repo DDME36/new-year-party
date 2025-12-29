@@ -4,7 +4,7 @@ import { useGuests } from '../App'
 const colors = ['#ff6b9d', '#ffd93d', '#6bcb77', '#9b5de5', '#4ecdc4', '#ff8c42']
 
 function Confetti() {
-  const [particles] = useState(() => 
+  const [particles] = useState(() =>
     Array.from({ length: 120 }).map((_, i) => ({
       id: i,
       left: Math.random() * 100,
@@ -52,8 +52,8 @@ function CelebrationScreen() {
 
 export default function LiveDisplayPage() {
   const { guests } = useGuests()
-  const checkedIn = guests.filter(g => g.checkedIn)
-  const pending = guests.filter(g => !g.checkedIn)
+  const checkedIn = guests.filter(g => g.checked_in)
+  const pending = guests.filter(g => !g.checked_in)
   const allArrived = guests.length > 0 && pending.length === 0
   const [currentTime, setCurrentTime] = useState(new Date())
 
@@ -76,7 +76,7 @@ export default function LiveDisplayPage() {
         <div className="absolute w-[3vw] h-[3vw] rounded-full bg-[#ff6b9d] bottom-[35%] left-[92%] animate-pulse" style={{ animationDuration: '2s' }} />
         <div className="absolute w-[5vw] h-[5vw] rounded-full border-[0.4vw] border-[#ffd93d] top-[75%] left-[6%] animate-bounce" style={{ animationDuration: '5s' }} />
       </div>
-      
+
       <div className="relative z-10 h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between mb-[1.5vw]">
@@ -89,7 +89,7 @@ export default function LiveDisplayPage() {
             <p className="text-[#666] text-[1.2vw]">{currentTime.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
           </div>
         </div>
-        
+
         {/* Progress */}
         <div className="bg-white rounded-[1vw] p-[1.2vw] mb-[1.5vw] border-[0.2vw] border-[#2d2d2d]">
           <div className="flex items-center justify-between mb-[0.8vw]">
@@ -100,7 +100,7 @@ export default function LiveDisplayPage() {
             <div className="h-full bg-[#6bcb77] rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
         </div>
-        
+
         {/* Guest Lists */}
         <div className="flex-1 grid grid-cols-2 gap-[1.5vw] min-h-0">
           {/* Checked In */}
@@ -126,7 +126,7 @@ export default function LiveDisplayPage() {
               )}
             </div>
           </div>
-          
+
           {/* Pending */}
           <div className="bg-white rounded-[1vw] p-[1.2vw] border-[0.2vw] border-[#ffd93d] overflow-hidden flex flex-col">
             <div className="flex items-center gap-[0.5vw] mb-[1vw] flex-shrink-0">
@@ -154,7 +154,7 @@ export default function LiveDisplayPage() {
             </div>
           </div>
         </div>
-        
+
         {/* Almost there banner */}
         {pending.length > 0 && pending.length <= 5 && (
           <div className="absolute bottom-[2vw] left-1/2 -translate-x-1/2 bg-[#ffd93d] px-[2vw] py-[1vw] rounded-full border-[0.2vw] border-[#2d2d2d]">

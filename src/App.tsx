@@ -1,25 +1,19 @@
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
 import { useState, useEffect, createContext, useContext } from 'react'
+import { supabase, Guest } from './lib/supabase'
 import HomePage from './pages/HomePage'
 import RegisterPage from './pages/RegisterPage'
 import BoardPage from './pages/BoardPage'
 import AdminPage from './pages/AdminPage'
 import LiveDisplayPage from './pages/LiveDisplayPage'
 
-interface Guest {
-  id: string
-  name: string
-  registeredAt: string
-  checkedIn: boolean
-  checkedInAt?: string
-}
-
 interface GuestContextType {
   guests: Guest[]
-  addGuest: (name: string) => void
-  checkInGuest: (id: string) => void
-  uncheckGuest: (id: string) => void
-  deleteGuest: (id: string) => void
+  loading: boolean
+  addGuest: (name: string) => Promise<boolean>
+  checkInGuest: (id: string) => Promise<void>
+  uncheckGuest: (id: string) => Promise<void>
+  deleteGuest: (id: string) => Promise<void>
 }
 
 const GuestContext = createContext<GuestContextType | null>(null)
@@ -31,73 +25,126 @@ export const useGuests = () => {
 }
 
 function GuestProvider({ children }: { children: React.ReactNode }) {
-  const [guests, setGuests] = useState<Guest[]>(() => {
-    try {
-      const saved = localStorage.getItem('new-year-guests')
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        // Validate data structure
-        if (Array.isArray(parsed)) {
-          return parsed.filter(g => g && typeof g.id === 'string' && typeof g.name === 'string')
-        }
-      }
-    } catch (e) {
-      console.error('Error loading guests from localStorage:', e)
-    }
-    return []
-  })
+  const [guests, setGuests] = useState<Guest[]>([])
+  const [loading, setLoading] = useState(true)
 
+  // Fetch guests on mount
   useEffect(() => {
-    try {
-      localStorage.setItem('new-year-guests', JSON.stringify(guests))
-    } catch (e) {
-      console.error('Error saving guests to localStorage:', e)
-    }
-  }, [guests])
+    fetchGuests()
 
-  // Sync across tabs
-  useEffect(() => {
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'new-year-guests' && e.newValue) {
-        try {
-          const parsed = JSON.parse(e.newValue)
-          if (Array.isArray(parsed)) {
-            setGuests(parsed.filter(g => g && typeof g.id === 'string' && typeof g.name === 'string'))
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('guests-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'guests' },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setGuests(prev => [...prev, payload.new as Guest])
+          } else if (payload.eventType === 'UPDATE') {
+            setGuests(prev => prev.map(g => g.id === payload.new.id ? payload.new as Guest : g))
+          } else if (payload.eventType === 'DELETE') {
+            setGuests(prev => prev.filter(g => g.id !== payload.old.id))
           }
-        } catch (e) {
-          console.error('Error parsing storage event:', e)
         }
-      }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
     }
-    window.addEventListener('storage', handleStorage)
-    return () => window.removeEventListener('storage', handleStorage)
   }, [])
 
-  const addGuest = (name: string) => {
+  const fetchGuests = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('guests')
+        .select('*')
+        .order('registered_at', { ascending: true })
+
+      if (error) throw error
+      setGuests(data || [])
+    } catch (error) {
+      console.error('Error fetching guests:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const addGuest = async (name: string): Promise<boolean> => {
     const trimmedName = name.trim()
-    if (!trimmedName) return
+    if (!trimmedName) return false
+
     // Check for duplicate names
     if (guests.some(g => g.name.toLowerCase() === trimmedName.toLowerCase())) {
       alert('ชื่อนี้ลงทะเบียนแล้ว')
-      return
+      return false
     }
-    setGuests(prev => [...prev, { id: crypto.randomUUID(), name: trimmedName, registeredAt: new Date().toISOString(), checkedIn: false }])
-  }
-  const checkInGuest = (id: string) => {
-    setGuests(prev => prev.map(g => g.id === id ? { ...g, checkedIn: true, checkedInAt: new Date().toISOString() } : g))
-  }
-  const uncheckGuest = (id: string) => {
-    setGuests(prev => prev.map(g => g.id === id ? { ...g, checkedIn: false, checkedInAt: undefined } : g))
-  }
-  const deleteGuest = (id: string) => { setGuests(prev => prev.filter(g => g.id !== id)) }
 
-  return <GuestContext.Provider value={{ guests, addGuest, checkInGuest, uncheckGuest, deleteGuest }}>{children}</GuestContext.Provider>
+    try {
+      const { error } = await supabase
+        .from('guests')
+        .insert({ name: trimmedName })
+
+      if (error) throw error
+      return true
+    } catch (error) {
+      console.error('Error adding guest:', error)
+      alert('เกิดข้อผิดพลาด กรุณาลองใหม่')
+      return false
+    }
+  }
+
+  const checkInGuest = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('guests')
+        .update({ checked_in: true, checked_in_at: new Date().toISOString() })
+        .eq('id', id)
+
+      if (error) throw error
+    } catch (error) {
+      console.error('Error checking in guest:', error)
+    }
+  }
+
+  const uncheckGuest = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('guests')
+        .update({ checked_in: false, checked_in_at: null })
+        .eq('id', id)
+
+      if (error) throw error
+    } catch (error) {
+      console.error('Error unchecking guest:', error)
+    }
+  }
+
+  const deleteGuest = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('guests')
+        .delete()
+        .eq('id', id)
+
+      if (error) throw error
+    } catch (error) {
+      console.error('Error deleting guest:', error)
+    }
+  }
+
+  return (
+    <GuestContext.Provider value={{ guests, loading, addGuest, checkInGuest, uncheckGuest, deleteGuest }}>
+      {children}
+    </GuestContext.Provider>
+  )
 }
 
 function Navigation() {
   const location = useLocation()
   const { guests } = useGuests()
-  const checkedIn = guests.filter(g => g.checkedIn).length
+  const checkedIn = guests.filter(g => g.checked_in).length
   const [menuOpen, setMenuOpen] = useState(false)
 
   if (location.pathname === '/live') return null
