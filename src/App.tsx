@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage'
 import BoardPage from './pages/BoardPage'
 import AdminPage from './pages/AdminPage'
 import LiveDisplayPage from './pages/LiveDisplayPage'
+import OverlayPage from './pages/OverlayPage'
 
 interface GuestContextType {
   guests: Guest[]
@@ -147,7 +148,7 @@ function Navigation() {
   const checkedIn = guests.filter(g => g.checked_in).length
   const [menuOpen, setMenuOpen] = useState(false)
 
-  if (location.pathname === '/live') return null
+  if (location.pathname === '/live' || location.pathname === '/overlay') return null
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass bg-[#fffbf0]">
@@ -198,6 +199,7 @@ function App() {
           <Route path="/board" element={<BoardPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/live" element={<LiveDisplayPage />} />
+          <Route path="/overlay" element={<OverlayPage />} />
         </Routes>
       </GuestProvider>
     </HashRouter>
