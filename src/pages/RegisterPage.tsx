@@ -84,7 +84,7 @@ export default function RegisterPage() {
               <div className="text-[#999] text-xs sm:text-sm">ลงทะเบียนแล้ว</div>
             </div>
             <div className="text-center">
-              <div className="font-display text-2xl sm:text-3xl font-bold text-[#6bcb77]">{guests.filter(g => g.checkedIn).length}</div>
+              <div className="font-display text-2xl sm:text-3xl font-bold text-[#6bcb77]">{guests.filter(g => g.checked_in).length}</div>
               <div className="text-[#999] text-xs sm:text-sm">มาถึงแล้ว</div>
             </div>
           </div>
