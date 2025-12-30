@@ -5,8 +5,8 @@ import MemphisBackground from '../components/MemphisBackground'
 const EVENT_DETAILS = {
   date: '31 ธันวาคม 2568',
   time: '18.00 น.',
-  venue: '53 หมู่ 2 ต.ร่องกาศ อ.สูงเม่น จ.แพร่ 54130',
-  address: '53 หมู่ 2 ตำบลร่องกาศ อำเภอสูงเม่น จังหวัดแพร่ 54130',
+  venue: 'บ้านย่า พ้องพาน',
+  address: '53 หมู่ 2 ตำบลนาจักร อำเภอเมือง จังหวัดแพร่ 54000',
   googleMapsUrl: 'https://maps.app.goo.gl/cVaKZXAufKvJDq4o6',
   appleMapsUrl: 'https://maps.apple.com/place?coordinate=18.102027,100.137271&name=52%20Ban%20Rong%20Kat%20Nuea-Na%20Chak%20Road&map=explore',
 }
